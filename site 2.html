@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>PYQ Portal — SITE Tadepalligudem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --font:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace;
+  --bg:#09090f;--bg2:#0f1018;--glass:rgba(255,255,255,.05);--border:rgba(255,255,255,.09);
+  --text:#eef0ff;--muted:#7880a0;--faint:#3a3f5c;
+  --accent:#6C63FF;--accent2:#00C6FF;--glow:rgba(108,99,255,.25);
+  --nav:rgba(9,9,15,.88);--r:16px;--rs:12px;--t:.22s cubic-bezier(.4,0,.2,1);
+}
+[data-theme=light]{
+  --bg:#f0f2fc;--bg2:#e8eaf6;--glass:rgba(255,255,255,.55);--border:rgba(108,99,255,.13);
+  --text:#0d0f22;--muted:#505580;--faint:#b0b5d0;--glow:rgba(108,99,255,.12);--nav:rgba(240,242,252,.9);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background var(--t),color var(--t)}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+
+/* LOADER */
+.loader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;transition:opacity .5s,visibility .5s}
+.loader.done{opacity:0;visibility:hidden;pointer-events:none}
+.loader-logo{font-family:var(--mono);font-size:2.5rem;font-weight:700;letter-spacing:.25em;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;margin-bottom:1.5rem}
+.loader-bar{width:180px;height:3px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin:0 auto 1rem}
+.loader-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;animation:fill 1.4s ease forwards}
+@keyframes fill{to{width:100%}}
+.loader-text{color:var(--muted);font-size:.8rem;text-align:center}
+
+/* NAVBAR */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:var(--nav);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1160px;margin:0 auto;padding:0 1.5rem;height:62px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:.55rem;font-weight:600;font-size:1rem;cursor:pointer}
+.logo-badge{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-family:var(--mono);font-size:.68rem;font-weight:700;letter-spacing:.1em;padding:3px 8px;border-radius:5px}
+.nav-right{display:flex;align-items:center;gap:.55rem}
+.icon-btn{width:38px;height:38px;border-radius:50%;background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;transition:background var(--t)}
+.icon-btn:hover{background:rgba(255,255,255,.1)}
+.hamburger{display:none;flex-direction:column;gap:5px;padding:9px;border-radius:8px;background:var(--glass);border:1px solid var(--border)}
+.hamburger span{display:block;width:18px;height:2px;background:var(--text);border-radius:2px}
+@media(max-width:600px){.hamburger{display:flex}}
+
+/* MOBILE NAV */
+.mob-nav{position:fixed;inset:0;z-index:1100;background:var(--bg2);transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);padding:1.5rem;overflow-y:auto}
+.mob-nav.open{transform:translateX(0)}
+.mob-close{position:absolute;top:1.2rem;right:1.5rem;font-size:1.2rem;color:var(--muted);width:36px;height:36px;border-radius:50%;background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+.mob-links{margin:4rem 0 1rem;display:flex;flex-direction:column;gap:.4rem}
+.mob-links a{display:block;padding:.8rem 1rem;background:var(--glass);border:1px solid var(--border);border-radius:10px;font-weight:500}
+.mob-sems{display:flex;flex-direction:column;gap:.35rem}
+.mob-sem-btn{text-align:left;padding:.75rem 1rem;background:var(--glass);border:1px solid var(--border);border-radius:10px;font-size:.875rem;display:flex;align-items:center;gap:.5rem;transition:background var(--t)}
+.mob-sem-btn:hover{background:rgba(255,255,255,.08)}
+
+/* HERO */
+.hero{position:relative;padding:120px 1.5rem 65px;text-align:center;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.hero-bg{position:absolute;inset:0;pointer-events:none}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.15;animation:float 8s ease-in-out infinite alternate}
+.orb1{width:460px;height:460px;background:var(--accent);top:-140px;left:-80px}
+.orb2{width:360px;height:360px;background:var(--accent2);top:-60px;right:-60px;animation-delay:-3s}
+.orb3{width:300px;height:300px;background:#FF6584;bottom:-80px;left:38%;animation-delay:-5s}
+@keyframes float{to{transform:translate(25px,20px) scale(1.07)}}
+.hero-inner{position:relative;z-index:1;max-width:640px;width:100%}
+.eyebrow{display:inline-flex;align-items:center;gap:.5rem;background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(12px);padding:.3rem .9rem;border-radius:99px;font-size:.75rem;color:var(--muted);margin-bottom:1.1rem}
+.pulse{width:7px;height:7px;background:#43B97F;border-radius:50%;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(67,185,127,.5)}50%{box-shadow:0 0 0 6px transparent}}
+.hero-title{font-size:clamp(2rem,6vw,3.4rem);font-weight:700;line-height:1.1;letter-spacing:-.02em;margin-bottom:.6rem}
+.grad{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--muted);font-size:.9rem;margin-bottom:1.8rem}
+.search-box{position:relative;max-width:480px;margin:0 auto}
+.search-box span{position:absolute;left:1rem;top:50%;transform:translateY(-50%);pointer-events:none;font-size:.95rem}
+.search-box input{width:100%;padding:.85rem 2.8rem;background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(12px);border-radius:99px;font-family:var(--font);font-size:.88rem;color:var(--text);outline:none;transition:border-color var(--t),box-shadow var(--t)}
+.search-box input::placeholder{color:var(--faint)}
+.search-box input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+.search-clr{position:absolute;right:1rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.85rem;opacity:0;transition:opacity var(--t)}
+.search-clr.show{opacity:1}
+
+/* BREADCRUMB */
+.bc{max-width:1160px;margin:0 auto;padding:.85rem 1.5rem;display:flex;align-items:center;gap:.45rem;font-size:.8rem;color:var(--muted)}
+.bc-home{cursor:pointer;color:var(--accent)}
+.bc-home:hover{text-decoration:underline}
+.bc-sep,.bc-item{color:var(--faint)}
+.bc-item{color:var(--text)}
+
+/* MAIN */
+.main{max-width:1160px;margin:0 auto;padding:0 1.5rem 5rem}
+.view{animation:up .35s ease both}
+.hidden{display:none!important}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.sec-head{font-size:1.2rem;font-weight:600;margin-bottom:1.4rem;display:flex;align-items:center;gap:.6rem}
+.count-tag{font-size:.7rem;background:var(--glass);border:1px solid var(--border);padding:2px 9px;border-radius:99px;color:var(--muted);font-weight:400}
+
+/* SEM GRID */
+.sem-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem}
+.sem-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:1.6rem 1.3rem;cursor:pointer;position:relative;overflow:hidden;transition:transform var(--t),box-shadow var(--t),border-color var(--t);animation:up .4s ease both}
+.sem-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--cc,var(--accent));border-radius:var(--r) var(--r) 0 0}
+.sem-card::after{content:'';position:absolute;bottom:-50px;right:-30px;width:110px;height:110px;background:var(--cc,var(--accent));opacity:.06;border-radius:50%;transition:transform .4s}
+.sem-card:hover::after{transform:scale(1.6)}
+.sem-card:hover{transform:translateY(-4px);border-color:var(--cc,var(--accent));box-shadow:0 14px 36px rgba(0,0,0,.3)}
+.sem-icon{font-size:1.8rem;margin-bottom:.55rem}
+.sem-name{font-size:1rem;font-weight:600;margin-bottom:.2rem}
+.sem-range{font-size:.75rem;color:var(--muted)}
+.sem-count{margin-top:.75rem;font-size:.72rem;color:var(--faint);display:flex;align-items:center;gap:.35rem}
+.sem-count::before{content:'';display:inline-block;width:5px;height:5px;background:var(--cc,var(--accent));border-radius:50%}
+.sem-card:nth-child(1){animation-delay:.04s}.sem-card:nth-child(2){animation-delay:.08s}
+.sem-card:nth-child(3){animation-delay:.12s}.sem-card:nth-child(4){animation-delay:.16s}
+.sem-card:nth-child(5){animation-delay:.20s}.sem-card:nth-child(6){animation-delay:.24s}
+.sem-card:nth-child(7){animation-delay:.28s}.sem-card:nth-child(8){animation-delay:.32s}
+
+/* YEAR TABS */
+.papers-hdr{margin-bottom:1.4rem}
+.year-tabs{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.9rem}
+.ytab{padding:.3rem .85rem;border-radius:99px;border:1px solid var(--border);background:var(--glass);font-size:.75rem;color:var(--muted);cursor:pointer;transition:all var(--t)}
+.ytab:hover{background:rgba(255,255,255,.08);color:var(--text)}
+.ytab.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 2px 10px var(--glow)}
+
+/* YEAR BLOCKS */
+.year-block{margin-bottom:2.2rem;animation:up .3s ease both}
+.yr-hdr{display:flex;align-items:center;gap:.75rem;margin-bottom:.9rem}
+.yr-pill{font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.08em;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:4px 13px;border-radius:99px;white-space:nowrap}
+.yr-line{flex:1;height:1px;background:var(--border)}
+.yr-cnt{font-size:.7rem;color:var(--faint);white-space:nowrap}
+.sessions-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:.8rem}
+
+/* SESSION CARD */
+.sess-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--rs);padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.75rem;transition:transform var(--t),border-color var(--t),box-shadow var(--t)}
+.sess-card:hover{transform:translateY(-3px);border-color:var(--cc,var(--accent));box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.sess-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem}
+.sess-label{font-weight:600;font-size:.88rem;line-height:1.35}
+.badge{font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.07em;padding:2px 7px;border-radius:4px;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.badge-reg{background:rgba(67,185,127,.15);color:#43B97F}
+.badge-sup{background:rgba(255,101,132,.15);color:#FF6584}
+.badge-both{background:rgba(108,99,255,.15);color:#a09bff}
+.sess-meta{font-size:.74rem;color:var(--muted)}
+
+/* THE BUTTON — plain <a> tag, no JS needed */
+.open-btn{
+  display:flex;align-items:center;justify-content:center;gap:.45rem;
+  width:100%;padding:.65rem 1rem;border-radius:8px;
+  background:var(--cc,var(--accent));color:#fff;
+  font-family:var(--font);font-size:.83rem;font-weight:600;
+  text-decoration:none;
+  transition:filter var(--t),transform var(--t),box-shadow var(--t);
+  cursor:pointer;
+}
+.open-btn:hover{filter:brightness(1.15);transform:translateY(-1px);box-shadow:0 4px 16px var(--glow)}
+
+/* SEARCH RESULTS */
+.sr-list{display:flex;flex-direction:column;gap:.6rem}
+.sr-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--rs);padding:.95rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;transition:border-color var(--t)}
+.sr-card:hover{border-color:var(--accent)}
+.sr-left{display:flex;flex-direction:column;gap:.2rem}
+.sr-sem{font-size:.72rem;font-weight:600}
+.sr-label{font-size:.88rem;font-weight:500}
+.sr-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border-radius:7px;background:var(--accent);color:#fff;font-size:.78rem;font-weight:600;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:filter var(--t)}
+.sr-btn:hover{filter:brightness(1.15)}
+@media(max-width:560px){.sr-card{flex-direction:column;align-items:flex-start}.sr-btn{align-self:stretch;justify-content:center}}
+
+/* EMPTY */
+.empty{text-align:center;padding:3.5rem 2rem;color:var(--muted);grid-column:1/-1}
+.empty .ei{font-size:2.8rem;margin-bottom:.75rem}
+.empty h3{font-size:1rem;color:var(--text);margin-bottom:.3rem}
+
+/* FOOTER */
+.footer{border-top:1px solid var(--border);background:var(--bg2);padding:2rem 1.5rem;text-align:center}
+.foot-inner{max-width:560px;margin:0 auto}
+.foot-brand{display:flex;align-items:center;justify-content:center;gap:.5rem;font-weight:600;margin-bottom:.6rem}
+.foot-copy{color:var(--muted);font-size:.76rem;line-height:1.7}
+
+/* SCROLL TOP */
+.scroll-top{position:fixed;bottom:1.75rem;right:1.4rem;z-index:900;width:42px;height:42px;border-radius:50%;background:var(--accent);color:#fff;font-size:1.1rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px var(--glow);opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .3s,visibility .3s,transform .3s}
+.scroll-top.vis{opacity:1;visibility:visible;transform:translateY(0)}
+.scroll-top:hover{filter:brightness(1.15)}
+
+@media(max-width:720px){.hero{padding:100px 1.25rem 55px}.sessions-grid{grid-template-columns:1fr}}
+@media(max-width:480px){.sem-grid{grid-template-columns:1fr 1fr}.sem-card{padding:1.2rem .9rem}}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+@media(prefers-reduced-motion:reduce){*,::before,::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader" class="loader">
+  <div>
+    <div class="loader-logo">SITE</div>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+    <div class="loader-text">Loading Question Papers…</div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo" onclick="goHome()">
+      <span class="logo-badge">PYQ</span>
+      <span>SITE</span>
+    </div>
+    <div class="nav-right">
+      <button class="icon-btn" id="themeBtn" title="Toggle theme"><span id="themeIcon">☀️</span></button>
+      <button class="hamburger" id="hamBtn"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="mob-nav" id="mobNav">
+  <button class="mob-close" id="mobClose">✕</button>
+  <div class="mob-links">
+    <a href="#" onclick="goHome();closeMob();return false;">🏠 Home</a>
+  </div>
+  <div class="mob-sems" id="mobSems"></div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-bg">
+    <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="eyebrow"><span class="pulse"></span>Autonomous · All Branches · 2018 – 2025</div>
+    <h1 class="hero-title">Previous Year<br/><span class="grad">Question Papers</span></h1>
+    <p class="hero-sub">Sasi Institute of Technology &amp; Engineering, Tadepalligudem</p>
+    <div class="search-box">
+      <span>🔍</span>
+      <input type="text" id="searchIn" placeholder="Search semester, year or session…" autocomplete="off"/>
+      <button class="search-clr" id="searchClr">✕</button>
+    </div>
+  </div>
+</header>
+
+<!-- BREADCRUMB -->
+<div class="bc">
+  <span class="bc-home" onclick="goHome()">🏠 Home</span>
+  <span class="bc-sep" id="bcSep" style="display:none">›</span>
+  <span class="bc-item" id="bcSem" style="display:none"></span>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- View 1: Sem grid -->
+  <section id="vSem" class="view">
+    <h2 class="sec-head">📚 Choose Your Semester</h2>
+    <div class="sem-grid" id="semGrid"></div>
+  </section>
+
+  <!-- View 2: Year-wise papers -->
+  <section id="vPapers" class="view hidden">
+    <div class="papers-hdr">
+      <h2 class="sec-head" id="papersTitle"></h2>
+      <div class="year-tabs" id="yearTabs"></div>
+    </div>
+    <div id="yearsBox"></div>
+  </section>
+
+  <!-- View 3: Search results -->
+  <section id="vSearch" class="view hidden">
+    <h2 class="sec-head">🔍 Search Results <span class="count-tag" id="srCount"></span></h2>
+    <div class="sr-list" id="srList"></div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="foot-inner">
+    <div class="foot-brand"><span class="logo-badge">PYQ</span> SITE</div>
+    <p class="foot-copy">
+      Sasi Institute of Technology &amp; Engineering · Kadakatla, Tadepalligudem – 534101<br/>
+      Papers sourced from SITE Central Library. Use your SASI email to access Google Drive. Educational use only.
+    </p>
+  </div>
+</footer>
+
+<button class="scroll-top" id="scrollTop">↑</button>
+
+<script>
+/* ===== DATA ===== */
+const SEMS = [
+  { id:"s1", label:"I B.Tech – Semester 1", short:"SEM I", icon:"📐", color:"#6C63FF", sessions:[
+    { y:2025, label:"2025 July Regular/Supply (SITE-23)", url:"https://drive.google.com/drive/folders/1HXUg3Uy8st-KG1cHUmV1jYRolAA8JxAq?usp=sharing" },
+    { y:2025, label:"2025 July Regular/Supply (SITE-21)", url:"https://drive.google.com/drive/folders/1amrqZU8-9yMX1oZ2bCkv1yA8iHRkIhx_?usp=sharing" },
+    { y:2025, label:"2025 January Supply",                url:"https://drive.google.com/drive/folders/1HXvenVk5txqriJiklc9zRHgroOCfCbhj?usp=sharing" },
+    { y:2025, label:"2025 January Regular",               url:"https://drive.google.com/drive/folders/1RDEQzrp9eHVsIgqEknmsbf7fGUTz09qR?usp=sharing" },
+    { y:2024, label:"2024 June Supply",                   url:"https://drive.google.com/drive/folders/1E78WXaOIb0xfSptiJop-f8fLx4qrZSMS?usp=sharing" },
+    { y:2024, label:"2024 January Supply",                url:"https://drive.google.com/drive/folders/1pzbQbiTYvwmwoq0pIPqzQBL5S4BgFi88?usp=sharing" },
+    { y:2024, label:"2024 January Regular",               url:"https://drive.google.com/drive/folders/1bJ3WXs_9XX3oMjtF45zgsA_y1rZztoYh?usp=sharing" },
+    { y:2023, label:"2023 February Regular",              url:"https://drive.google.com/drive/folders/1vqdEdAdCCq3uSaeGrOHkeNSv9P0LSIfr?usp=sharing" },
+    { y:2023, label:"2023 February Supply",               url:"https://drive.google.com/file/d/1bAgIXBCiGTLshwaGQh0uxH9FE5qne_BM/view?usp=sharing" },
+    { y:2022, label:"2022 September",                     url:"https://drive.google.com/open?id=1m81gprCm9h2ssscHj5vt02yQaV-vEfNc&usp=drive_copy" },
+    { y:2021, label:"2021 July-August Supply",            url:"https://drive.google.com/open?id=1u-jcULp3wTE7HDPQapqcHSV1hW1fPa3p&usp=drive_copy" },
+    { y:2021, label:"2021 July-August",                   url:"https://drive.google.com/open?id=1ZGNSbAr9GQvfFC1ibvGAdUfsq9vYNqjf&usp=drive_copy" },
+    { y:2019, label:"2019 December",                      url:"https://drive.google.com/open?id=1GjfgrrTiHD-qVoBCwXgDSyHD-AhhhtQU&usp=drive_copy" },
+    { y:2018, label:"2018 November",                      url:"https://drive.google.com/open?id=1MhTczyjD3K-lKCi5zyheEdm1VQsQC_Wa&usp=drive_copy" }
+  ]},
+  { id:"s2", label:"I B.Tech – Semester 2", short:"SEM II", icon:"🔬", color:"#FF6584", sessions:[
+    { y:2025, label:"2025 July Regular/Supply (SITE-23)", url:"https://drive.google.com/drive/folders/1ojlEvcHx91DdvY5Nq7bY5zKFKTBDhrlF?usp=sharing" },
+    { y:2025, label:"2025 July Regular/Supply (SITE-21)", url:"https://drive.google.com/drive/folders/1rOeR4J20-O1nc53hDUl7QX2_tDxkTChi?usp=sharing" },
+    { y:2025, label:"2025 January Supply",                url:"https://drive.google.com/drive/folders/1HXvenVk5txqriJiklc9zRHgroOCfCbhj?usp=sharing" },
+    { y:2025, label:"2025 January Regular",               url:"https://drive.google.com/drive/folders/1qUvJ92mLHL6AEMMQXNaURPbEMbVTM_eF?usp=sharing" },
+    { y:2024, label:"2024 July Regular",                  url:"https://drive.google.com/drive/folders/1YvqhYJ3qi7ixPzo4XfhbSV6bZ5WrL6W6?usp=sharing" },
+    { y:2024, label:"2024 January Supply",                url:"https://drive.google.com/drive/folders/1qQuFyPVhV_7MD1PVYQFACQJwsA5SvFkF?usp=sharing" },
+    { y:2023, label:"2023 August (Supply)",               url:"https://drive.google.com/drive/folders/19cgULfx1-8IkHgla1gQE8HqPL01bGpKW?usp=sharing" },
+    { y:2023, label:"2023 February (Supply)",             url:"https://drive.google.com/file/d/16rSxgVXzsRTlbpQ7rs9OPalpxbfdGvjU/view?usp=sharing" },
+    { y:2022, label:"2022 April",                         url:"https://drive.google.com/open?id=1JTFSQdmLe7jo77OcXP5cxsdHJa7gECSA&usp=drive_copy" },
+    { y:2021, label:"2021 August",                        url:"https://drive.google.com/open?id=1avFTN3q98xa8UYINXVdjYF2oOhU1iGry&usp=drive_copy" },
+    { y:2019, label:"2019 April",                         url:"https://drive.google.com/open?id=1F5z2OVR4VsWbH1oiYpD0bFRvUJQUUvK5&usp=drive_copy" }
+  ]},
+  { id:"s3", label:"II B.Tech – Semester 3", short:"SEM III", icon:"⚡", color:"#43B97F", sessions:[
+    { y:2025, label:"2025 April/May Supply (SITE-23)",              url:"https://drive.google.com/drive/folders/17ol-O1WNCVbXhKWUvLb9YNtaEEU5BYLs?usp=drive_link" },
+    { y:2025, label:"2025 April/May Supply (SITE-21)",              url:"https://drive.google.com/drive/folders/1buoGxH_ZCNSG6sB6FZO9N65fykpzcsqr?usp=sharing" },
+    { y:2025, label:"2025 April/May Supply (SITE-18)",              url:"https://drive.google.com/drive/folders/1K9oImi0vP-zL1SE3qxHhVk6-Mhzwdagk?usp=sharing" },
+    { y:2024, label:"2024 December Regular (SITE-23)",              url:"https://drive.google.com/drive/folders/1XFfOCeGmDpXJ-0XZ1ijHXY1xmczq3AkQ?usp=sharing" },
+    { y:2024, label:"2024 December Supply (SITE-21)",               url:"https://drive.google.com/drive/folders/1AxqUkfh49dWUv0gPLnB53_6oAAo3EnF_?usp=sharing" },
+    { y:2024, label:"2024 December Supply (SITE-18M)",              url:"https://drive.google.com/drive/folders/1qZJoFIRRcilJEZrVkrrTZ0ZQ5vLJFhYp?usp=sharing" },
+    { y:2024, label:"2024 June Supply",                             url:"https://drive.google.com/drive/folders/1ph0fdrq9HdHdhcrhx8xfOeR7vqcKiWBC?usp=sharing" },
+    { y:2023, label:"2023 Dec & Jan 2024 Regular/Supply (SITE-21)", url:"https://drive.google.com/drive/folders/12XKwnrtT5FCml6P4prUNsoY18LRvad92?usp=sharing" },
+    { y:2023, label:"2023 Dec & Jan 2024 Supply (SITE-18)",         url:"https://drive.google.com/drive/folders/1BV4baw7aMmfKobCbyazQgByOdvdFsILP?usp=sharing" },
+    { y:2023, label:"2023 July (Supply)",                           url:"https://drive.google.com/drive/folders/1tYpP0OQm1_nj_tZC6ExAqFcsLGR38GfQ?usp=drive_link" },
+    { y:2023, label:"2023 February Supply",                         url:"https://drive.google.com/drive/folders/1pEzCjx6sEi4lVZQ4sUoPpK7iCz0hWFbH?usp=sharing" },
+    { y:2023, label:"2023 February Regular",                        url:"https://drive.google.com/drive/folders/1PMTNitKq6IkpcVN_GoQ2Ac9apAugpWu1?usp=sharing" },
+    { y:2022, label:"2022 March (Supply)",                          url:"https://drive.google.com/open?id=1H-FAGdVzUVOgx_Aafdps4XbjGjw3tMhS&usp=drive_copy" },
+    { y:2021, label:"2021 March (Regular)",                         url:"https://drive.google.com/open?id=1zmaS0hqsDcf556e1oMPjK_b2hkzQcD1O&usp=drive_copy" },
+    { y:2021, label:"2021 Aug/Sep (Supply)",                        url:"https://drive.google.com/open?id=1W_9QP0WHPW96kxZpuZB9bqAbdDhxgB0R&usp=drive_copy" },
+    { y:2019, label:"2019 November",                                url:"https://drive.google.com/open?id=13dzTvGbTZfQuz2yTB0VVx5k7IKWUN-56&usp=drive_copy" }
+  ]},
+  { id:"s4", label:"II B.Tech – Semester 4", short:"SEM IV", icon:"💡", color:"#F7B731", sessions:[
+    { y:2025, label:"2025 April Regular (SITE-23)",           url:"https://drive.google.com/drive/folders/1JvcvjMsRiohqgoLXbbriAgUXGtdmNE01?usp=sharing" },
+    { y:2025, label:"2025 April Supply (SITE-21)",            url:"https://drive.google.com/drive/folders/1HnfyG5QdKJqFE0KsrSV-SKegUJb35Mab?usp=sharing" },
+    { y:2025, label:"2025 April Supply (SITE-18)",            url:"https://drive.google.com/drive/folders/1O_INcznEAEUHw9f2O6-YchiyYrlM50Iv?usp=sharing" },
+    { y:2024, label:"2024 December Supply (SITE-21)",         url:"https://drive.google.com/drive/folders/1y32K93cOJYvWlFH2NuKI5B6iD05vohZE?usp=sharing" },
+    { y:2024, label:"2024 December Supply (SITE-18)",         url:"https://drive.google.com/drive/folders/194y6yFnaSz13yZQzJAollyIOe9e4Onzn?usp=sharing" },
+    { y:2024, label:"2024 June Supply (SITE-21)",             url:"https://drive.google.com/drive/folders/1BJfS0E-Gszyr958qdBgkWuig_7Oeex-x?usp=sharing" },
+    { y:2024, label:"2024 June Supply (SITE-18M)",            url:"https://drive.google.com/drive/folders/16hI_SnlsqYx5MCJPpZtMt820zkkR-woN?usp=sharing" },
+    { y:2023, label:"2023 Dec & Jan 2024 Supply (SITE-21)",   url:"https://drive.google.com/drive/folders/1hpELEGGs1pNCgIKNlKoo9vvyeB2E4DPV?usp=sharing" },
+    { y:2023, label:"2023 Dec & Jan 2024 Supply (SITE-18)",   url:"https://drive.google.com/drive/folders/19_h7HYs0k5Ou8Ca2E78X_bLqEj5815oK?usp=sharing" },
+    { y:2023, label:"2023 July (Supply)",                     url:"https://drive.google.com/drive/folders/1LTREjWTBmv2fnXu8jzVIWbibjMialWLs?usp=sharing" },
+    { y:2023, label:"2023 February Supply",                   url:"https://drive.google.com/drive/folders/106FoZZ6c_raa5hruuvx1g_KrWdLl8r7e?usp=sharing" },
+    { y:2022, label:"2022 August (Supply)",                   url:"https://drive.google.com/open?id=1Ul9d-_8S2wUQRi8MOkIB65nyuJw-z4nr&usp=drive_copy" },
+    { y:2022, label:"2022 August (Regular)",                  url:"https://drive.google.com/open?id=1IJryqkH9Ao04KnMtAe569MiJheZa6EjV&usp=drive_copy" },
+    { y:2022, label:"2022 March (Supply)",                    url:"https://drive.google.com/open?id=1JR1NQNA_l75ShbIoQ_T6Wy0IgehtSGVU&usp=drive_copy" },
+    { y:2021, label:"2021 August (Regular/Supply)",           url:"https://drive.google.com/open?id=1gPjtqksGRGpl7LdnS45I58fn0LIFVbUh&usp=drive_copy" },
+    { y:2021, label:"2021 March (Supply)",                    url:"https://drive.google.com/open?id=1TqjOwjx900EE88GkgfXGIWUADLaD5JbM&usp=drive_copy" }
+  ]},
+  { id:"s5", label:"III B.Tech – Semester 5", short:"SEM V", icon:"🌐", color:"#00B4D8", sessions:[
+    { y:2025, label:"2025 December Regular (SITE-21)", url:"https://drive.google.com/drive/folders/1E9fMgm6yHpphT-JmhVCou9N2JFFhr3QF?usp=sharing" },
+    { y:2025, label:"2025 December Supply (SITE-21)",  url:"https://drive.google.com/drive/folders/13OP247bkBP9gAAjUPXq4zla4lNgmGDJS?usp=sharing" },
+    { y:2025, label:"2025 April Supply (SITE-21)",     url:"https://drive.google.com/drive/folders/17wFeFDJCawlinnRMic2QDl4vxaErBjXm?usp=sharing" },
+    { y:2025, label:"2025 April Supply (SITE-S8M)",    url:"https://drive.google.com/file/d/1PK5I6H0Afyw5-u5qlT-XPSQKvbmgXfNR/view?usp=sharing" },
+    { y:2024, label:"2024 Nov Regular (SITE-21)",      url:"https://drive.google.com/drive/folders/1dDTLreTmu-4vVafBIwXC10QyVH6FKA59?usp=sharing" },
+    { y:2024, label:"2024 June Supply (SITE-18M)",     url:"https://drive.google.com/drive/folders/1ltgRp6x2QUkwy1SE7pxz8o6k1opndQhm?usp=sharing" },
+    { y:2023, label:"2023 November (Regular)",         url:"https://drive.google.com/drive/folders/1dyAAmGV5fkETT6k1FMGHdQ5_UZm93LjV?usp=sharing" },
+    { y:2023, label:"2023 January (Supply)",           url:"https://drive.google.com/drive/folders/1SaeA1-D0uAHCcDgFelK7nJjC8aMHkxej?usp=sharing" },
+    { y:2023, label:"2023 January (Regular)",          url:"https://drive.google.com/drive/folders/1rhBYYZlWpbieDwqLr7W5H9bsUKifbSXf?usp=sharing" },
+    { y:2022, label:"2022 February (Regular/Supply)",  url:"https://drive.google.com/open?id=1TJ4M4tgl2JUj5z6KvOzXXFo2tw4fWVRA&usp=drive_copy" },
+    { y:2021, label:"2021 Aug/Sep (Supply)",           url:"https://drive.google.com/open?id=1Z54dyoGRVp6wwVpvzLAZSEQLnh3vim33&usp=drive_copy" },
+    { y:2021, label:"2021 February (Regular)",         url:"https://drive.google.com/open?id=1pA12Z05st66K0nJ20g3W3k1bkDaP_hgj&usp=drive_copy" }
+  ]},
+  { id:"s6", label:"III B.Tech – Semester 6", short:"SEM VI", icon:"🧠", color:"#8B5CF6", sessions:[
+    { y:2025, label:"2025 December Supply (SITE-21)",  url:"https://drive.google.com/drive/folders/1oUldc5tOcUNXNlryEAZDCJX92XCx9Jwb?usp=sharing" },
+    { y:2025, label:"2025 April Regular (SITE-21)",    url:"https://drive.google.com/drive/folders/1fIaDYYKKkkfLl0ECI8c8d8nr-kgyR7zX?usp=sharing" },
+    { y:2025, label:"2025 April Supply (SITE-18M)",    url:"https://drive.google.com/file/d/1rd3sbHjG3RYp_Lt85I4YanZnjprEbOTO/view?usp=sharing" },
+    { y:2024, label:"2024 November Supply (SITE-21)",  url:"https://drive.google.com/drive/folders/1YveWWfwWXQdC3lD-nJsS5I85zn7qpxIz?usp=sharing" },
+    { y:2024, label:"2024 May Regular",                url:"https://drive.google.com/drive/folders/1Vi01RQjHuooU28sy8O5dMbbs8WdIwwOp?usp=sharing" },
+    { y:2023, label:"2023 December (Supply)",          url:"https://drive.google.com/drive/folders/1bK7d0-bJN4-jH8VUD43wikFNvgXd7nkd?usp=sharing" },
+    { y:2023, label:"2023 May (Regular/Supply)",       url:"https://drive.google.com/drive/folders/1Y352OnHv1lRxTmnGXBFl3o1TGk5y3BWA?usp=sharing" },
+    { y:2022, label:"2022 December (Supply)",          url:"https://drive.google.com/drive/folders/1lqX83j7NQaSAgNX5Y9GFsNxxOoumOU0S?usp=sharing" },
+    { y:2022, label:"2022 February (Supply)",          url:"https://drive.google.com/open?id=1eEIiKuCyzGRx8OyY0GPgr1I-t-Ep94ZC&usp=drive_copy" },
+    { y:2022, label:"2022 August (Regular/Supply)",    url:"https://drive.google.com/open?id=1ctXx2GRrcg3ScWdISCQoBHBMXJ-nwaPn&usp=drive_copy" },
+    { y:2021, label:"2021 August (Regular)",           url:"https://drive.google.com/open?id=1saC97BHiNyOC03RVnoHK2swnUMz4k-X_&usp=drive_copy" }
+  ]},
+  { id:"s7", label:"IV B.Tech – Semester 7", short:"SEM VII", icon:"🚀", color:"#EF4444", sessions:[
+    { y:2025, label:"2025 Nov Regular/Supply (SITE-18)", url:"https://drive.google.com/drive/folders/1fzZuDQHwW0X25tyLG-kJFdXrPoZYWblL?usp=sharing" },
+    { y:2025, label:"2025 Nov Regular/Supply (SITE-21)", url:"https://drive.google.com/drive/folders/1h6A9zAG61fMu4uPrVlELjY1xnegpuVDH?usp=sharing" },
+    { y:2025, label:"2025 April Supply (SITE-S8M)",      url:"https://drive.google.com/file/d/1d2K5zxKGtAubjsj_LROB3LUjpEzXw5zQ/view?usp=sharing" },
+    { y:2024, label:"2024 December Regular (SITE-21)",   url:"https://drive.google.com/drive/folders/1UTRFFPjb-JrVSVwjL91fgME2ZY9E-LPO?usp=sharing" },
+    { y:2024, label:"2024 March Regular & Supply",       url:"https://drive.google.com/drive/folders/15WPR3VD-7D35ZpMKzDAx_5Q3_i0Fmq6W?usp=sharing" },
+    { y:2023, label:"2023 November (Supply)",            url:"https://drive.google.com/drive/folders/1vUbFSiLSbaMlNe8bjviHnGElhd_XW_Jl?usp=sharing" },
+    { y:2023, label:"2023 November (Regular)",           url:"https://drive.google.com/drive/folders/1aLzhpFLxcbyxsymJchqHnck1fTL86lgw?usp=sharing" },
+    { y:2022, label:"2022 December (Supply)",            url:"https://drive.google.com/drive/folders/1doEvwi6FzAUHwBpTWJ58_Dp9Xl6qjQUb?usp=sharing" },
+    { y:2022, label:"2022 February (Regular)",           url:"https://drive.google.com/open?id=1jU2ApUzgxPpBwnMLTDBEuWb4Kjrjqas4&usp=drive_copy" },
+    { y:2022, label:"2022 June (Supply)",                url:"https://drive.google.com/open?id=1qebo_yUzVBCP5u7aQnMjxGefHgfBK2CQ&usp=drive_copy" }
+  ]},
+  { id:"s8", label:"IV B.Tech – Semester 8", short:"SEM VIII", icon:"🎓", color:"#F97316", sessions:[
+    { y:2025, label:"2025 April Supply (SITE-18M)", url:"https://drive.google.com/file/d/1DP-ATn7XlRfQxqmUsZ3DRYG5xPq7IwIr/view?usp=sharing" },
+    { y:2023, label:"2023 May (Regular/Supply)",    url:"https://drive.google.com/drive/folders/115L9IHzT-M35RUg0ixEZkcIhY3Xgzw45?usp=sharing" },
+    { y:2022, label:"2022 June (Regular)",          url:"https://drive.google.com/open?id=1yW5aJCa-ynHS_ZHSr4fLnTlIV43fC6ac&usp=drive_copy" }
+  ]}
+];
+
+/* ===== APP ===== */
+const G = id => document.getElementById(id);
+let curSem = null, activeY = 'all', stimer = null;
+
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => G('loader').classList.add('done'), 1400);
+  // theme
+  const th = localStorage.getItem('t') || 'dark';
+  setTheme(th);
+  G('themeBtn').onclick = () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+  // scroll top
+  const st = G('scrollTop');
+  window.addEventListener('scroll', () => st.classList.toggle('vis', scrollY > 300), {passive:true});
+  st.onclick = () => scrollTo({top:0,behavior:'smooth'});
+  // nav
+  G('hamBtn').onclick = () => G('mobNav').classList.add('open');
+  G('mobClose').onclick = closeMob;
+  // search
+  const si = G('searchIn'), sc = G('searchClr');
+  si.addEventListener('input', () => {
+    const q = si.value.trim();
+    sc.classList.toggle('show', !!q);
+    clearTimeout(stimer);
+    if (!q) { curSem ? show('vPapers') : show('vSem'); return; }
+    stimer = setTimeout(() => doSearch(q), 220);
+  });
+  sc.onclick = () => { si.value=''; sc.classList.remove('show'); curSem ? show('vPapers') : show('vSem'); };
+  // render
+  buildSemGrid();
+  buildMobSems();
+});
+
+function setTheme(t) {
+  document.documentElement.dataset.theme = t;
+  G('themeIcon').textContent = t==='dark'?'☀️':'🌙';
+  localStorage.setItem('t', t);
+}
+function closeMob() { G('mobNav').classList.remove('open'); }
+function show(id) { ['vSem','vPapers','vSearch'].forEach(v => G(v).classList.toggle('hidden', v!==id)); }
+
+function buildSemGrid() {
+  G('semGrid').innerHTML = SEMS.map(s => {
+    const yrs = [...new Set(s.sessions.map(x=>x.y))].sort((a,b)=>b-a);
+    return `<div class="sem-card" onclick="pickSem('${s.id}')" style="--cc:${s.color}">
+      <div class="sem-icon">${s.icon}</div>
+      <div class="sem-name">${s.label}</div>
+      <div class="sem-range">${yrs[yrs.length-1]} – ${yrs[0]}</div>
+      <div class="sem-count">${s.sessions.length} exam sessions</div>
+    </div>`;
+  }).join('');
+}
+
+function buildMobSems() {
+  G('mobSems').innerHTML = SEMS.map(s =>
+    `<button class="mob-sem-btn" onclick="pickSem('${s.id}');closeMob()">${s.icon} ${s.label}</button>`
+  ).join('');
+}
+
+function pickSem(id) {
+  curSem = SEMS.find(s => s.id === id);
+  activeY = 'all';
+  show('vPapers');
+  G('papersTitle').textContent = curSem.icon + ' ' + curSem.label;
+  G('bcSep').style.display = '';
+  G('bcSem').style.display = '';
+  G('bcSem').textContent = curSem.label;
+  buildYearTabs();
+  renderYears();
+  scrollTo({top:0,behavior:'smooth'});
+}
+
+function goHome() {
+  curSem = null; activeY = 'all';
+  G('searchIn').value = ''; G('searchClr').classList.remove('show');
+  G('bcSep').style.display = 'none'; G('bcSem').style.display = 'none';
+  show('vSem');
+  scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildYearTabs() {
+  const yrs = [...new Set(curSem.sessions.map(s=>s.y))].sort((a,b)=>b-a);
+  G('yearTabs').innerHTML =
+    `<button class="ytab active" onclick="filterY('all')">All Years</button>` +
+    yrs.map(y=>`<button class="ytab" onclick="filterY(${y})">${y}</button>`).join('');
+}
+
+function filterY(y) {
+  activeY = y;
+  document.querySelectorAll('.ytab').forEach(b =>
+    b.classList.toggle('active', b.textContent.trim() === (y==='all'?'All Years':String(y)))
+  );
+  renderYears();
+}
+
+function renderYears() {
+  const list = activeY==='all' ? curSem.sessions : curSem.sessions.filter(s=>s.y===activeY);
+  const grp = {};
+  list.forEach(s => { if(!grp[s.y]) grp[s.y]=[]; grp[s.y].push(s); });
+  const years = Object.keys(grp).map(Number).sort((a,b)=>b-a);
+
+  if (!years.length) {
+    G('yearsBox').innerHTML = `<div class="empty"><div class="ei">📭</div><h3>No sessions found</h3></div>`;
+    return;
+  }
+
+  G('yearsBox').innerHTML = years.map((yr, i) => {
+    const cards = grp[yr].map(s => {
+      const isR = /regular/i.test(s.label), isS = /supply/i.test(s.label);
+      const badge = isR&&isS?'REG + SUPPLY':isS?'SUPPLY':'REGULAR';
+      const bc = isR&&isS?'badge-both':isS?'badge-sup':'badge-reg';
+      return `<div class="sess-card" style="--cc:${curSem.color}">
+        <div class="sess-top">
+          <div class="sess-label">${s.label}</div>
+          <span class="badge ${bc}">${badge}</span>
+        </div>
+        <div class="sess-meta">${curSem.short} &nbsp;·&nbsp; ${s.y}</div>
+        <a class="open-btn" href="${s.url}" target="_blank" rel="noopener noreferrer" style="background:${curSem.color}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+          Open All Papers
+        </a>
+      </div>`;
+    }).join('');
+    return `<div class="year-block" style="animation-delay:${i*.07}s">
+      <div class="yr-hdr">
+        <span class="yr-pill">${yr}</span>
+        <div class="yr-line"></div>
+        <span class="yr-cnt">${grp[yr].length} session${grp[yr].length>1?'s':''}</span>
+      </div>
+      <div class="sessions-grid">${cards}</div>
+    </div>`;
+  }).join('');
+}
+
+function doSearch(q) {
+  const lq = q.toLowerCase(), hits = [];
+  SEMS.forEach(sem => sem.sessions.forEach(s => {
+    if(s.label.toLowerCase().includes(lq)||sem.label.toLowerCase().includes(lq)||String(s.y).includes(lq))
+      hits.push({sem,s});
+  }));
+  show('vSearch');
+  G('srCount').textContent = hits.length + ' result' + (hits.length!==1?'s':'');
+  if (!hits.length) {
+    G('srList').innerHTML = `<div class="empty"><div class="ei">🔍</div><h3>No results for "${q}"</h3></div>`;
+    return;
+  }
+  G('srList').innerHTML = hits.map(({sem,s}) => {
+    const isR=/regular/i.test(s.label),isS=/supply/i.test(s.label);
+    const badge=isR&&isS?'REG+SUP':isS?'SUPPLY':'REGULAR';
+    const bc=isR&&isS?'badge-both':isS?'badge-sup':'badge-reg';
+    return `<div class="sr-card">
+      <div class="sr-left">
+        <div class="sr-sem" style="color:${sem.color}">${sem.icon} ${sem.short}</div>
+        <div class="sr-label">${s.label}</div>
+        <span class="badge ${bc}" style="margin-top:.3rem">${badge}</span>
+      </div>
+      <a class="sr-btn" href="${s.url}" target="_blank" rel="noopener noreferrer">
+        Open Papers →
+      </a>
+    </div>`;
+  }).join('');
+}
+</script>
+</body>
+</html>
